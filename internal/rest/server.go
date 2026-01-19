@@ -28,6 +28,7 @@ func (s *Server) routes() {
 	s.mux.HandleFunc("/rules", s.handleRules)
 	s.mux.HandleFunc("/default", s.handleDefault)
 	//s.mux.HandleFunc("/stats", s.handleStats)
+	s.mux.HandleFunc("/health", s.handleHealth)
 }
 
 func (s *Server) Listen(addr string) error {

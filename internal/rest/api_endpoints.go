@@ -218,3 +218,44 @@ func (s *Server) setDefault(w http.ResponseWriter, r *http.Request) {
         w.WriteHeader(http.StatusOK)
 }
 
+
+// ------------------------
+// --- Health check API ---
+// ------------------------
+
+type HealthStatus struct {
+    Status      string  `json:"status"`
+    XDPAttached bool    `json:"xdp_attached"`
+    CPUPercent  float64 `json:"cpu_percent"`
+    MemoryMB    uint64  `json:"memory_mb"`
+}
+
+func (s *Server) handleHealth(w http.ResponseWriter, r *http.Request) {
+    cpuPct, err := getCPUPercent()
+    if err != nil {
+        http.Error(w, err.Error(), 500)
+        return
+    }
+
+    memMB, err := getMemMB()
+    if err != nil {
+        http.Error(w, err.Error(), 500)
+        return
+    }
+
+    attached := false
+    if s.bpf != nil && s.bpf.Link != nil {
+	    attached = true
+    }
+
+    health := HealthStatus{
+	    Status:      "ok",
+	    XDPAttached: attached,
+	    CPUPercent:  cpuPct,
+	    MemoryMB:    memMB,
+    }
+
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(health)
+}
+

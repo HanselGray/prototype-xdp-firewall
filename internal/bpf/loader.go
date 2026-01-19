@@ -14,6 +14,7 @@ type BPF struct {
 	Link link.Link
 }
 
+
 // Getting XDP status post attachment
 
 func getXDPStatus(lnk link.Link) (ebpf.ProgramID, *link.XDPInfo, error) {
@@ -76,8 +77,8 @@ func LoadAndAttach(ifaceName string, mode string) (*BPF, error) {
 		fmt.Println("[warning] failed to obtain XDP program metadata: %v", err)
 		log.Printf("[warning] failed to obtain XDP program metadata: %v", err)
 	} else {
-		fmt.Println("[success] xdp program attached: if_index: %d, if_name: %s, xdp_prog_id: %d", xdpStatus.Ifindex, iface.Name, programId)
-		log.Printf("[success] xdp program attached: if_index: %d, if_name: %s, xdp_prog_id: %d", xdpStatus.Ifindex, iface, programId)
+		fmt.Printf("[success] xdp program attached: if_index: %d, if_name: %s, xdp_prog_id: %d", xdpStatus.Ifindex, iface.Name, programId)
+		log.Printf("[success] xdp program attached: if_index: %d, if_name: %s, xdp_prog_id: %d", xdpStatus.Ifindex, iface.Name, programId)
 	}
 
 	return &BPF{
